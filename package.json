@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "nodemon --experimental-transform-types ."
+    "serve": "node --watch .",
+    "run": "node ."
   },
   "keywords": [],
   "author": "",
