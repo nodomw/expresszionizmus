@@ -12,7 +12,7 @@ import { default as vevo } from "./routes/vevo.ts";
 
 const app = express();
 
-app.use(express.static("public"));
+app.use("/public", express.static("public"));
 app.use(express.json());
 
 app.use(
