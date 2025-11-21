@@ -52,7 +52,7 @@ route.put("/:id", (req, res) => {
     const futar = model.parse(req.body);
 
     pool
-      .execute("update futar set fnev = ?, ftel = ? where id = ?", [
+      .execute("update futar set fnev = ?, ftel = ? where fazon = ?", [
         futar.fnev,
         futar.ftel,
         id.parse(Number(req.params.id)),
@@ -67,7 +67,7 @@ route.put("/:id", (req, res) => {
 route.delete("/:id", (req, res) => {
   try {
     pool
-      .execute("delete from futar where id = ?", [
+      .execute("delete from futar where fazon = ?", [
         id.parse(Number(req.params.id)),
       ])
       .then((r) => res.status(200).json(r))
