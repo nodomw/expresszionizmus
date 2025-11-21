@@ -1,14 +1,8 @@
 import express from "express";
 import pool from "../pool.ts";
-import * as z from "zod";
+import * as model from "../models.ts";
 
 const route = express.Router();
-const id = z.number().nonnegative();
-const model = z.object({
-  vazon: z.number().nonnegative(),
-  fazon: z.number().nonnegative(),
-  idopont: z.string().nonempty(),
-});
 
 route.get("/", (req, res) => {
   try {
@@ -27,7 +21,7 @@ route.get("/:id", (req, res) => {
   try {
     pool
       .execute("select * from rendeles where razon = ?", [
-        id.parse(Number(req.params.id)),
+        model.id.parse(Number(req.params.id)),
       ])
       .then((result) => res.status(200).json(result))
       .catch((e) => {
@@ -40,7 +34,7 @@ route.get("/:id", (req, res) => {
 
 route.post("/", (req, res) => {
   try {
-    const rendeles = model.parse(req.body);
+    const rendeles = model.rendeles.parse(req.body);
 
     pool
       .execute(
@@ -58,7 +52,7 @@ route.post("/", (req, res) => {
 
 route.put("/:id", (req, res) => {
   try {
-    const rendeles = model.parse(req.body);
+    const rendeles = model.rendeles.parse(req.body);
 
     pool
       .execute(
@@ -67,7 +61,7 @@ route.put("/:id", (req, res) => {
           rendeles.vazon,
           rendeles.fazon,
           rendeles.idopont,
-          id.parse(Number(req.params.id)),
+          model.id.parse(Number(req.params.id)),
         ],
       )
       .then((r) => res.status(200).json(r))
@@ -83,7 +77,7 @@ route.delete("/:id", (req, res) => {
   try {
     pool
       .execute("delete from rendeles where razon = ?", [
-        id.parse(Number(req.params.id)),
+        model.id.parse(Number(req.params.id)),
       ])
       .then((r) => res.status(200).json(r))
       .catch((e) => {

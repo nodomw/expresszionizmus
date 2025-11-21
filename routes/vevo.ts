@@ -1,13 +1,8 @@
 import express from "express";
 import pool from "../pool.ts";
-import * as z from "zod";
+import * as model from "../models.ts";
 
 const route = express.Router();
-const id = z.number().nonnegative();
-const model = z.object({
-  vnev: z.string().nonempty(),
-  vcim: z.string().nonempty(),
-});
 route.get("/", (req, res) => {
   try {
     pool
@@ -24,7 +19,7 @@ route.get("/:id", (req, res) => {
   try {
     pool
       .execute("select * from vevo where vazon = ?", [
-        id.parse(Number(req.params.id)),
+        model.id.parse(Number(req.params.id)),
       ])
       .then((result) => res.status(200).json(result))
       .catch((e) => {
@@ -36,7 +31,7 @@ route.get("/:id", (req, res) => {
 });
 route.post("/", (req, res) => {
   try {
-    const vevo = model.parse(req.body);
+    const vevo = model.vevo.parse(req.body);
 
     pool
       .execute("insert into vevo (vnev, vcim) values (?, ?)", [
@@ -50,13 +45,13 @@ route.post("/", (req, res) => {
 });
 route.put("/:id", (req, res) => {
   try {
-    const vevo = model.parse(req.body);
+    const vevo = model.vevo.parse(req.body);
 
     pool
       .execute("update vevo set vnev = ?, vcim = ? where vazon = ?", [
         vevo.vnev,
         vevo.vcim,
-        id.parse(Number(req.params.id)),
+        model.id.parse(Number(req.params.id)),
       ])
       .then((r) => res.status(200).json(r));
   } catch (e) {
@@ -67,7 +62,7 @@ route.delete("/:id", (req, res) => {
   try {
     pool
       .execute("delete from vevo where vazon = ?", [
-        id.parse(Number(req.params.id)),
+        model.id.parse(Number(req.params.id)),
       ])
       .then((r) => res.status(200).json(r));
   } catch (e) {
